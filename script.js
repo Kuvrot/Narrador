@@ -47,7 +47,7 @@ const zipInput = document.getElementById('file');
 const textOutput = document.getElementById('textToConvert');
 
 var unzippedFile;
-var fileNames = [];
+let fileNames = [];
 
 // Listen for the file input change event
 zipInput.addEventListener('change', function() {
@@ -57,7 +57,6 @@ zipInput.addEventListener('change', function() {
         
         reader.onload = function(e) {
             const arrayBuffer = e.target.result;
-            console.log("xd");
             // Use JSZip to process the zip file
             JSZip.loadAsync(arrayBuffer).then(function(zip) {
                 // Loop through the files inside the zip
@@ -67,18 +66,18 @@ zipInput.addEventListener('change', function() {
                         fileNames.push(zipEntry.name);
                     }
                 });
+
+                fileNames.sort();
+
+                fileNames.forEach(function (fileName) {
+                    const option = document.createElement('option');
+                    option.value = fileName;
+                    option.textContent = fileName.replace('.xhtml' , '');
+                    option.textContent = option.textContent.split('/').pop();
+                    chapterSelection.appendChild(option);
+                });
                 
             });
-
-            fileNames.sort();
-            fileNames.forEach(function (fileName){
-                        const option = document.createElement('option');
-                        option.value = fileName;
-                        option.textContent = fileName.replace('.xhtml' , '');
-                        option.textContent = option.textContent.split('/').pop();
-                        chapterSelection.appendChild(option);
-            });
-
         };
 
         // Read the zip file as an ArrayBuffer
