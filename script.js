@@ -65,6 +65,10 @@ const textOutput = document.getElementById('textToConvert');
 var unzippedFile;
 let fileNames = [];
 
+function isNumber (n) {
+    return Number(n)=== n;
+}
+
 // unzipping the epub book
 zipInput.addEventListener('change', function() {
     const file = zipInput.files[0]; // Get the selected .zip file
@@ -75,22 +79,19 @@ zipInput.addEventListener('change', function() {
             const arrayBuffer = e.target.result;
             // Use JSZip to process the zip file
             JSZip.loadAsync(arrayBuffer).then(function(zip) {
-                // Loop through the files inside the zip
+                // Loop through the files inside the zip and add the names into a list to sort it later
                 unzippedFile = zip;
                 zip.forEach(function (relativePath, zipEntry) {
-                    if (zipEntry.name.endsWith(".xhtml")) {
-                        fileNames.push(zipEntry.name);
+                    if (zipEntry.name.endsWith(".xhtml") && zipEntry.name.match(/\d+/) !== null) {
+                        fileNames.push(zipEntry.name.replace('.xhtml' , ''));
                     }
                 });
 
-                fileNames.sort();
-
                 fileNames.forEach(function (fileName) {
                     const option = document.createElement('option');
-                    option.value = fileName;
-                    option.textContent = fileName.replace('.xhtml' , '');
+                    option.value = fileName + '.xhtml';
+                    option.textContent = fileName;
                     option.textContent = option.textContent.split('/').pop();
-                    option.textContent = option.textContent.match(/\d+/)[0];
                     chapterSelection.appendChild(option);
                 });
                 
@@ -113,10 +114,12 @@ chapterSelection.addEventListener('change' , function () {
 
     unzippedFile.forEach(function (relativePath, zipEntry) {
         unzippedFile.forEach(function (relativePath, zipEntry) {
+
+            // if the iterated name is equal to the selected one, then this is the chapter that will be narrated
             if (zipEntry.name == chapterSelection.value) {
                 zipEntry.async("text").then(function(content) {
-                content = content.replace(/<[^>]*>/g, '');
-                textOutput.value = content.replace(zipEntry.name.split('/').pop() , '');
+                content = content.replace(/<[^>]*>/g, ''); // This removes all the html tags found
+                textOutput.value = content.replace(zipEntry.name.split('/').pop() , ''); //this removes the file name from the narration
                 });
             }
         });
