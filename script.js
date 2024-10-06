@@ -1,7 +1,6 @@
 const text = document.getElementById("textToConvert");
 const convertBtn = document.getElementById("convertBtn");
 const chapterSelection = document.getElementById("book-chapters");
-const langSelection = document.getElementById("book-language");
 const speechSynth = window.speechSynthesis;
 
 const voiceSelect = document.getElementById("voiceSelect");
