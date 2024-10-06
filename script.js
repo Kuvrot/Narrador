@@ -87,6 +87,21 @@ zipInput.addEventListener('change', function() {
                     }
                 });
 
+                //sort the names
+                fileNames.sort((a, b) => {
+                    // Extract numeric part or return a large number for non-matching cases
+                    let numA = parseInt(a.match(/\d+$/)) || 0;
+                    let numB = parseInt(b.match(/\d+$/)) || 0;
+                  
+                    // Sort alphabetically first if no numbers are present
+                    if (numA === numB) {
+                      return a.localeCompare(b);
+                    }
+                  
+                    // Compare the numeric parts
+                    return numA - numB;
+                  });
+                
                 fileNames.forEach(function (fileName) {
                     const option = document.createElement('option');
                     option.value = fileName + '.xhtml';
@@ -94,7 +109,6 @@ zipInput.addEventListener('change', function() {
                     option.textContent = option.textContent.split('/').pop();
                     chapterSelection.appendChild(option);
                 });
-                
             });
         };
 
