@@ -5,8 +5,8 @@ const speechSynth = window.speechSynthesis;
 const voiceSelect = document.getElementById("voiceSelect");
 
 let playing = false;
-
 let voices = [];
+
 window.addEventListener("load", (event) => {
     populateVoiceList();
 });
@@ -17,6 +17,7 @@ voiceSelect.addEventListener("change" , function () {
     console.log('cambio');
 });
 
+//Get al the available voices, and put them as options in a select input.
 function populateVoiceList() {
     voices = speechSynth.getVoices();
     voiceSelect.innerHTML = ""; // Clear existing options
@@ -29,6 +30,7 @@ function populateVoiceList() {
     });
 } 
 
+//When the play button is pressed
 convertBtn.addEventListener('click', function () {
     const enteredText = text.value;
 
@@ -53,6 +55,7 @@ convertBtn.addEventListener('click', function () {
     }
 });
 
+//This functions will be called anytime the audio has to be stopped
 function stop () {
     speechSynth.cancel();
     convertBtn.innerHTML= '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/></svg>'
@@ -65,10 +68,6 @@ const textOutput = document.getElementById('textToConvert');
 var unzippedFile;
 let fileNames = [];
 
-function isNumber (n) {
-    return Number(n)=== n;
-}
-
 // unzipping the epub book
 zipInput.addEventListener('change', function() {
     const file = zipInput.files[0]; // Get the selected .zip file
@@ -79,8 +78,11 @@ zipInput.addEventListener('change', function() {
             const arrayBuffer = e.target.result;
             // Use JSZip to process the zip file
             JSZip.loadAsync(arrayBuffer).then(function(zip) {
-                // Loop through the files inside the zip and add the names into a list to sort it later
+
+                //unzippedFile variable will be used again when playing the TTS audio.
                 unzippedFile = zip;
+
+                // Loop through the files inside the zip and add the names into a list to sort it later
                 zip.forEach(function (relativePath, zipEntry) {
                     if (zipEntry.name.endsWith(".xhtml") && zipEntry.name.match(/\d+/) !== null) {
                         fileNames.push(zipEntry.name.replace('.xhtml' , ''));
@@ -102,6 +104,7 @@ zipInput.addEventListener('change', function() {
                     return numA - numB;
                   });
                 
+                //Put the names as options into the select element
                 fileNames.forEach(function (fileName) {
                     const option = document.createElement('option');
                     option.value = fileName + '.xhtml';
