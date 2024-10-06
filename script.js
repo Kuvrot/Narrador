@@ -65,7 +65,7 @@ const textOutput = document.getElementById('textToConvert');
 var unzippedFile;
 let fileNames = [];
 
-// Listen for the file input change event
+// unzipping the epub book
 zipInput.addEventListener('change', function() {
     const file = zipInput.files[0]; // Get the selected .zip file
     if (file) {
@@ -104,6 +104,7 @@ zipInput.addEventListener('change', function() {
     }
 });
 
+// When a new chapter is selected
 chapterSelection.addEventListener('change' , function () {
 
     //Clear the output
@@ -115,7 +116,7 @@ chapterSelection.addEventListener('change' , function () {
             if (zipEntry.name == chapterSelection.value) {
                 zipEntry.async("text").then(function(content) {
                 content = content.replace(/<[^>]*>/g, '');
-                textOutput.value = content.replace(zipEntry.name , '');
+                textOutput.value = content.replace(zipEntry.name.split('/').pop() , '');
                 });
             }
         });
