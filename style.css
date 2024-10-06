@@ -60,8 +60,13 @@ body {
     color: #fff;
     cursor: pointer;
     transition: all 0.25s;
+    width: 25%;
 }
 
-.btn:hover {
+.play-btn:hover {
+    padding: 1rem;
+}
+
+.stop-btn:hover {
     padding: 1rem;
 }
