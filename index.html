@@ -7,10 +7,22 @@
         "width=device-width, initial-scale=1.0">
     <title>Text to Speech Converter</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <!-- Image and text -->
+    <nav class="navbar bg-dark navbar-dark shadow sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+            <!-- <img src="" class="me-2" height="20" loading="lazy"/> -->
+                <small>NarradorLibre</small>
+            </a>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="app-container">
             <div class="headings-container">
@@ -24,10 +36,9 @@
                     <option hidden>Select the chapter you would like to listen</option> 
                 </select>
 
-                <select name="chapters" id="voiceSelect">
+                <select name="voiceSelect" id="voiceSelect">
                     <option hidden>Select voice and language</option> 
                 </select>
-
             </div>
 
             <div class="interaction-container">
@@ -39,13 +50,14 @@
                 <p class="error-para"></p>
 
                 <button class="btn" id="convertBtn">
-                    Play Converted Sound
+                    Play
                 </button>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
