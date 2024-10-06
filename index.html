@@ -25,34 +25,34 @@
     <div class="container">
         <div class="app-container">
             <div class="headings-container">
-                <h1>NARRADOR</h1>
+                <h1 hidden>NARRADOR</h1>
                 <h2>Turn your digital book into an audiobook</h3>
 
                 <label for="file">Upload your EPUB book</label>
-                <input type="file" id="file">
+                <input type="file" class="form-control" id="file" style="width: 70%; margin-bottom: 2%;"/>
 
-                <select name="chapters" id="book-chapters">
+                <select class="form-select" name="chapters" id="book-chapters">
                     <option hidden>Select the chapter you would like to listen</option> 
-                </select>
-
-                <select name="voiceSelect" id="voiceSelect">
-                    <option hidden>Select voice and language</option> 
                 </select>
             </div>
 
             <div class="interaction-container">
                 <textarea id="textToConvert" 
                     placeholder="" 
-                    id="" cols="35" rows="10" 
-                    class="text-control"></textarea>
+                    id="" cols="35" rows="21" 
+                    class="text-control">
+                </textarea>
             </div>
+
+            <select class="form-select" name="voiceSelect" id="voiceSelect" style="width: 70%; margin-bottom: 2%;">
+                <option hidden>Select voice and language</option> 
+            </select>
 
             <button class="btn" id="convertBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
                     <path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/>
                 </svg>
             </button>
-            
         </div>
     </div>
 
