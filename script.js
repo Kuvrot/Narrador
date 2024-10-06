@@ -117,6 +117,8 @@ zipInput.addEventListener('change', function() {
 
         // Read the zip file as an ArrayBuffer
         reader.readAsArrayBuffer(file);
+
+        chapterSelection.innerHTML="";
     } else {
         textOutput.value = ''; // Clear the textarea if no file is selected
     }
