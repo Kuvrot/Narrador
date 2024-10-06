@@ -89,6 +89,10 @@ zipInput.addEventListener('change', function() {
 
 chapterSelection.addEventListener('change' , function () {
 
+    console.log("xd");
+    console.log(fileNames);
+    console.log(unzippedFile);
+
     //Clear the output
     textOutput.value = '';
 
