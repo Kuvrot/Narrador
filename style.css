@@ -75,3 +75,8 @@ body {
 .stop-btn:hover {
     padding: 1rem;
 }
+
+.repository-icon {
+    text-decoration: none;
+    color: white;
+}
