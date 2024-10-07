@@ -9,6 +9,11 @@ let voices = [];
 
 window.addEventListener("load", (event) => {
     populateVoiceList();
+
+    //This timeout solves a bug when sometimes the voices are not loaded with the site
+    setTimeout(() => {
+        populateVoiceList();
+    }, 100);
 });
 
 // Populate voice list when voices are loaded
