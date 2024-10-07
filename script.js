@@ -13,7 +13,6 @@ window.addEventListener("load", (event) => {
 
 // Populate voice list when voices are loaded
 voiceSelect.addEventListener("change" , function () {
-    populateVoiceList();
     speechSynth.voice = voices[voiceSelect.value];
 });
 
