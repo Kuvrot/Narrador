@@ -13,8 +13,8 @@ window.addEventListener("load", (event) => {
 
 // Populate voice list when voices are loaded
 voiceSelect.addEventListener("change" , function () {
+    populateVoiceList();
     speechSynth.voice = voices[voiceSelect.value];
-    console.log('cambio');
 });
 
 //Get al the available voices, and put them as options in a select input.
@@ -120,12 +120,12 @@ zipInput.addEventListener('change', function() {
 
         chapterSelection.innerHTML="";
     } else {
-        textOutput.value = ''; // Clear the textarea if no file is selected
+        textOutput.value = ""; // Clear the textarea if no file is selected
     }
 });
 
 // When a new chapter is selected
-chapterSelection.addEventListener('change' , function () {
+chapterSelection.addEventListener("change" , function () {
 
     //Clear the output
     textOutput.value = '';
@@ -138,7 +138,8 @@ chapterSelection.addEventListener('change' , function () {
             if (zipEntry.name == chapterSelection.value) {
                 zipEntry.async("text").then(function(content) {
                 content = content.replace(/<[^>]*>/g, ''); // This removes all the html tags found
-                textOutput.value = content.replace(zipEntry.name.split('/').pop() , ''); //this removes the file name from the narration
+                content = content.replace(zipEntry.name.split('/').pop() , ""); //this removes the file name from the narration
+                textOutput.value = content.replace(zipEntry.name.replace(".xhtml") , "");
                 });
             }
         });
