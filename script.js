@@ -6,23 +6,25 @@ const voiceSelect = document.getElementById("voiceSelect");
 
 let playing = false;
 let voices = [];
+let currentSegment = 0;
+let segments = [];
+let utterance;  // Save the utterance globally
 
 window.addEventListener("load", (event) => {
-    //This timeout solves a bug when sometimes the voices are not loaded with the site
+    // This timeout avoids a bug, because sometimes the voices don't load at all.
     setTimeout(() => {
         populateVoiceList();
     }, 100);
 });
 
-// Populate voice list when voices are loaded
-voiceSelect.addEventListener("change" , function () {
+// Load voice list
+voiceSelect.addEventListener("change", function () {
     speechSynth.voice = voices[voiceSelect.value];
 });
 
-//Get al the available voices, and put them as options in a select input.
 function populateVoiceList() {
     voices = speechSynth.getVoices();
-    voiceSelect.innerHTML = ""; // Clear existing options
+    voiceSelect.innerHTML = ""; // Clean the existing options
     
     voices.forEach((voice, index) => {
         const option = document.createElement('option');
@@ -30,37 +32,57 @@ function populateVoiceList() {
         option.value = index;
         voiceSelect.appendChild(option);
     });
-} 
+}
 
-//When the play button is pressed
+// Divides the text into an N number of words
+function divideTextIntoSegments(text, segmentSize) {
+    const words = text.split(/\s+/).filter(word => word.length > 0);
+    for (let i = 0; i < words.length; i += segmentSize) {
+        segments.push(words.slice(i, i + segmentSize).join(' '));
+    }
+}
+
+// Plays a segment
+function playSegment(segment) {
+    if (segment < segments.length && playing) {
+        utterance = new SpeechSynthesisUtterance(segments[segment]);
+        utterance.voice = voices[voiceSelect.value];
+
+        //When the speech ends this is called
+        utterance.onend = function () {
+            if (playing){ // This second validation seems redundant, but is made in order to avoid removing the previous segment if the speech was stopped manually.
+                segments.shift();// This removes the first element
+            }
+            playSegment(currentSegment);  // Plays the next segment
+        };
+        speechSynth.speak(utterance);
+    } 
+}
+
+//This is when the play button is pressed
 convertBtn.addEventListener('click', function () {
-    const enteredText = text.value;
+    const enteredText = text.value.replace(/<[^>]*>/g, '');  // deletes HTML tags
 
-    if (!speechSynth.speaking && !enteredText.trim().length) {
-        error.textContent = `Nothing to Convert! 
-        Enter text in the text area.`
+    if (!enteredText.trim().length) {
+        //This is in case there is nothing to convert
+        return;
     }
 
-    if (playing){
+    if (playing) {
         stop();
-    }else{
-        if (!speechSynth.speaking && enteredText.trim().length) {
-            const enteredText2 = enteredText.replace(/<[^>]*>/g, '');
-            const newUtter =
-                new SpeechSynthesisUtterance(enteredText2);
-            
-            newUtter.voice = voices[voiceSelect.value];
-            speechSynth.speak(newUtter);
-            playing = true;
-            convertBtn.innerHTML= '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-stop" viewBox="0 0 16 16"><path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5z"/></svg>'
-        }
+    } else {
+        currentSegment = 0;
+        divideTextIntoSegments(enteredText, 100);  // Divide in fragments of N words.
+        playing = true;
+        playSegment(currentSegment);
+        convertBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-stop" viewBox="0 0 16 16"><path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a.5.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5z"/></svg>';
     }
 });
 
-//This functions will be called anytime the audio has to be stopped
-function stop () {
+//Stop the speech
+function stop() {
     speechSynth.cancel();
-    convertBtn.innerHTML= '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/></svg>'
+    convertBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/></svg>';
     playing = false;
 }
 
@@ -125,6 +147,7 @@ zipInput.addEventListener('change', function() {
         textOutput.value = ""; // Clear the textarea if no file is selected
     }
 });
+
 
 // When a new chapter is selected
 chapterSelection.addEventListener("change" , function () {
