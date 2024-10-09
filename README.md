@@ -1,6 +1,7 @@
 # Narrador
 ### Turn your digital book into an audiobook
-![imagen](https://github.com/user-attachments/assets/d0d43303-c87e-43c7-84bd-ddc67b98ac22)
+<img src="https://github.com/user-attachments/assets/8059e873-1f6e-444d-beee-1f087f5a6c23" width=50% height=50%>
+
 
  ## Build (Pull requests are welcome)
 * if using GIT get the repo with
