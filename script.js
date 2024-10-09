@@ -164,6 +164,9 @@ chapterSelection.addEventListener("change" , function () {
        // if the iterated name is equal to the selected one, then this is the chapter that will be narrated
        if (zipEntry.name == chapterSelection.value) {
         zipEntry.async("text").then(function(content) {
+            content = content.replace(".</p>", '.');
+            content = content.replace("</p>", '.');
+            content = content.replace("</h1>", '.');
             content = content.replace(/<[^>]*>/g, ''); // This removes all the html tags found
             content = content.replace(zipEntry.name.split('/').pop() , ""); //this removes the file name from the narration
 
