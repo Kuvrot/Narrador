@@ -56,7 +56,9 @@ function playSegment(segment) {
             playSegment(currentSegment);  // Plays the next segment
         };
         speechSynth.speak(utterance);
-    } 
+    }else{
+        stop();
+    }
 }
 
 //This is when the play button is pressed
@@ -64,7 +66,7 @@ convertBtn.addEventListener('click', function () {
     const enteredText = text.value.replace(/<[^>]*>/g, '');  // deletes HTML tags
 
     if (!enteredText.trim().length) {
-        //This is in case there is nothing to convert
+        //In case there is nothing to convert
         return;
     }
 
@@ -85,6 +87,9 @@ function stop() {
     convertBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/></svg>';
     playing = false;
 }
+
+
+//////// UNZIP the EPUB Book
 
 const zipInput = document.getElementById('file');
 const textOutput = document.getElementById('textToConvert');
@@ -157,16 +162,14 @@ chapterSelection.addEventListener("change" , function () {
     stop();
 
     unzippedFile.forEach(function (relativePath, zipEntry) {
-        unzippedFile.forEach(function (relativePath, zipEntry) {
-
-            // if the iterated name is equal to the selected one, then this is the chapter that will be narrated
-            if (zipEntry.name == chapterSelection.value) {
-                zipEntry.async("text").then(function(content) {
-                content = content.replace(/<[^>]*>/g, ''); // This removes all the html tags found
-                content = content.replace(zipEntry.name.split('/').pop() , ""); //this removes the file name from the narration
-                textOutput.value = content.replace(zipEntry.name.replace(".xhtml") , "");
-                });
-            }
-        });
+       // if the iterated name is equal to the selected one, then this is the chapter that will be narrated
+       if (zipEntry.name == chapterSelection.value) {
+        zipEntry.async("text").then(function(content) {
+            content = content.replace(/<[^>]*>/g, ''); // This removes all the html tags found
+            content = content.replace(zipEntry.name.split('/').pop() , ""); //this removes the file name from the narration
+            divideTextIntoSegments(content , 100);
+            textOutput.value = content.replace(zipEntry.name.replace(".xhtml") , "");
+            });
+        }
     });    
 });
