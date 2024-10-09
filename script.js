@@ -92,7 +92,6 @@ function stop() {
 //////// UNZIP the EPUB Book
 
 const zipInput = document.getElementById('file');
-const textOutput = document.getElementById('textToConvert');
 
 var unzippedFile;
 let fileNames = [];
@@ -149,7 +148,7 @@ zipInput.addEventListener('change', function() {
 
         chapterSelection.innerHTML="";
     } else {
-        textOutput.value = ""; // Clear the textarea if no file is selected
+        text.value = ""; // Clear the textarea if no file is selected
     }
 });
 
@@ -158,7 +157,7 @@ zipInput.addEventListener('change', function() {
 chapterSelection.addEventListener("change" , function () {
 
     //Clear the output
-    textOutput.value = '';
+    text.value = '';
     stop();
 
     unzippedFile.forEach(function (relativePath, zipEntry) {
@@ -167,8 +166,11 @@ chapterSelection.addEventListener("change" , function () {
         zipEntry.async("text").then(function(content) {
             content = content.replace(/<[^>]*>/g, ''); // This removes all the html tags found
             content = content.replace(zipEntry.name.split('/').pop() , ""); //this removes the file name from the narration
-            divideTextIntoSegments(content , 100);
-            textOutput.value = content.replace(zipEntry.name.replace(".xhtml") , "");
+
+            segments = []; // restart the segments array
+            text.value = content; // the textfield will be equal to the content of the file
+
+            text.value = content.replace(zipEntry.name.replace(".xhtml") , "");
             });
         }
     });    
