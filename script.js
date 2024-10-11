@@ -3,6 +3,7 @@ const convertBtn = document.getElementById("convertBtn");
 const chapterSelection = document.getElementById("book-chapters");
 const speechSynth = window.speechSynthesis;
 const voiceSelect = document.getElementById("voiceSelect");
+var input;
 
 let playing = false;
 let voices = [];
@@ -89,71 +90,73 @@ function stop() {
     playing = false;
 }
 
-//////// UNZIP the EPUB Book
-
-const zipInput = document.getElementById('file');
-
+// Opening file and unzipping the file
 var unzippedFile;
 let fileNames = [];
+function openFile (){
+    zipInput = document.createElement('input');
+    zipInput.type = 'file';
+    zipInput.accept = '.epub' , '.mobi' , '.zip';
+    zipInput.id = 'file';
 
-// unzipping the epub book
-zipInput.addEventListener('change', function() {
-    const file = zipInput.files[0]; // Get the selected .zip file
-    if (file) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            const arrayBuffer = e.target.result;
-            // Use JSZip to process the zip file
-            JSZip.loadAsync(arrayBuffer).then(function(zip) {
+    //Unzipping
+    zipInput.onchange = function() {
+        const file = zipInput.files[0]; // Get the selected .zip file
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                // Use JSZip to process the zip file
+                JSZip.loadAsync(arrayBuffer).then(function(zip) {
 
-                //unzippedFile variable will be used again when playing the TTS audio.
-                unzippedFile = zip;
+                    //unzippedFile variable will be used again when playing the TTS audio.
+                    unzippedFile = zip;
 
-                // Loop through the files inside the zip and add the names into a list to sort it later
-                zip.forEach(function (relativePath, zipEntry) {
-                    if (zipEntry.name.endsWith(".xhtml") && zipEntry.name.match(/\d+/) !== null) {
-                        fileNames.push(zipEntry.name.replace('.xhtml' , ''));
-                    }
+                    // Loop through the files inside the zip and add the names into a list to sort it later
+                    zip.forEach(function (relativePath, zipEntry) {
+                        if (zipEntry.name.endsWith(".xhtml") && zipEntry.name.match(/\d+/) !== null) {
+                            fileNames.push(zipEntry.name.replace('.xhtml' , ''));
+                        }
+                    });
+
+                    //sort the names
+                    fileNames.sort((a, b) => {
+                        // Extract numeric part or return a large number for non-matching cases
+                        let numA = parseInt(a.match(/\d+$/)) || 0;
+                        let numB = parseInt(b.match(/\d+$/)) || 0;
+                    
+                        // Sort alphabetically first if no numbers are present
+                        if (numA === numB) {
+                        return a.localeCompare(b);
+                        }
+                    
+                        // Compare the numeric parts
+                        return numA - numB;
+                    });
+                    
+                    //Put the names as options into the select element
+                    fileNames.forEach(function (fileName) {
+                        const option = document.createElement('option');
+                        option.value = fileName + '.xhtml';
+                        option.textContent = fileName;
+                        option.textContent = option.textContent.split('/').pop();
+                        chapterSelection.appendChild(option);
+                    });
                 });
+            };
 
-                //sort the names
-                fileNames.sort((a, b) => {
-                    // Extract numeric part or return a large number for non-matching cases
-                    let numA = parseInt(a.match(/\d+$/)) || 0;
-                    let numB = parseInt(b.match(/\d+$/)) || 0;
-                  
-                    // Sort alphabetically first if no numbers are present
-                    if (numA === numB) {
-                      return a.localeCompare(b);
-                    }
-                  
-                    // Compare the numeric parts
-                    return numA - numB;
-                  });
-                
-                //Put the names as options into the select element
-                fileNames.forEach(function (fileName) {
-                    const option = document.createElement('option');
-                    option.value = fileName + '.xhtml';
-                    option.textContent = fileName;
-                    option.textContent = option.textContent.split('/').pop();
-                    chapterSelection.appendChild(option);
-                });
-            });
-        };
+            // Read the zip file as an ArrayBuffer
+            reader.readAsArrayBuffer(file);
 
-        // Read the zip file as an ArrayBuffer
-        reader.readAsArrayBuffer(file);
+            chapterSelection.innerHTML="";
+        } else {
+            text.value = ""; // Clear the textarea if no file is selected
+        }
+    };
+    zipInput.click();
+}
 
-        chapterSelection.innerHTML="";
-    } else {
-        text.value = ""; // Clear the textarea if no file is selected
-    }
-});
-
-
-// When a new chapter is selected
+// When a new chapter/file is selected
 chapterSelection.addEventListener("change" , function () {
 
     //Clear the output
