@@ -2,7 +2,7 @@
 
 body {
     font-family: "Poppins", sans-serif;
-    background-image: linear-gradient(90deg, #161578, #b81055);
+    background-image: linear-gradient(90deg, #17153B, #2E236C);
 }
 
 .container {
@@ -48,7 +48,7 @@ body {
 .text-control {
     padding: 0.5rem;
     margin: 1rem 0;
-    background-color: #ffffffe3;
+    background-color: #ECDFCC;
     color: #000000;
     border: 1px solid #fff;
     border-radius: 10px;
@@ -64,7 +64,7 @@ body {
 
 .btn {
     padding: 0.8rem;
-    background-image: linear-gradient(90deg, #F4244C, #F57D4E);
+    background-color: #433D8B;
     border: 1px solid transparent;
     border-radius: 10px;
     color: #fff;
