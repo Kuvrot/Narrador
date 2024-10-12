@@ -15,7 +15,7 @@ window.addEventListener("load", (event) => {
     // This timeout avoids a bug, because sometimes the voices don't load at all.
     setTimeout(() => {
         populateVoiceList();
-    }, 1000);
+    }, 2000);
 });
 
 // Load voice list
