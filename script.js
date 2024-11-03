@@ -114,8 +114,10 @@ function openFile (){
 
                     // Loop through the files inside the zip and add the names into a list to sort it later
                     zip.forEach(function (relativePath, zipEntry) {
-                        if (zipEntry.name.endsWith(".xhtml") && zipEntry.name.match(/\d+/) !== null) {
-                            fileNames.push(zipEntry.name.replace('.xhtml' , ''));
+                        if (zipEntry.name.endsWith(".xhtml") || zipEntry.name.endsWith(".html")) {
+                            if (zipEntry.name.match(/\d+/) !== null){
+                                fileNames.push(zipEntry.name.replace('.xhtml' , ''));
+                            }
                         }
                     });
 
